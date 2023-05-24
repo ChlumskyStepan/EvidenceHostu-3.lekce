@@ -13,7 +13,39 @@ import java.util.List;
 
 
 public class EvidenceHostu {
+    //Metoda pro získaní celkového počtu rezervací
+    public static void vypisPocetRezervaci(List<Rezervace> rezervaceList) {
+        int pocetRezervaci = rezervaceList.size();
+        System.out.println("\nCelkový počet rezervací: " + pocetRezervaci);
+    }
+
+    //Metoda pro získání celkového počtu rezervací pro pracovní pobyt
+    public static int pocetRezervaciPracovniPobyty(List<Rezervace> rezervaceList) {
+        int pocetPracovnichPobytu = 0;
+        for (Rezervace rezervace : rezervaceList) {
+            if (rezervace.getTypPobytu() == TypPobytu.PRACOVNI) {
+                pocetPracovnichPobytu++;
+            }
+        }
+        return pocetPracovnichPobytu;
+    }
+
+    //Metoda pro výpočet průměrného počtu hostů na jednu rezervaci
+    public static double prumernyPocetHostuNaRezervaci(List<Rezervace> rezervaceList) {
+        int celkovyPocetHostu = 0;
+        for (Rezervace rezervace : rezervaceList) {
+            celkovyPocetHostu += rezervace.getPocetHostu();
+        }
+        return (double) celkovyPocetHostu / rezervaceList.size();
+    }
+
+    //Metoda pro výpočet počtu nocí mezi dvěma daty
+    public static int pocetNoci(LocalDate datumOd, LocalDate datumDo) {
+        return (int) ChronoUnit.DAYS.between(datumOd, datumDo) + 1;
+    }
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy");
+
     public static void main(String[] args) {
 
 
@@ -111,19 +143,19 @@ public class EvidenceHostu {
             }
         }
 
-            //Výpis seznamu rezervací na obrazovku
-            System.out.println("\nSeznam všech rezervací:");
-            for (Rezervace rezervace : rezervaceList) {
-                System.out.println(rezervace);
-            }
+        //Výpis seznamu rezervací na obrazovku
+        System.out.println("\nSeznam všech rezervací:");
+        for (Rezervace rezervace : rezervaceList) {
+            System.out.println(rezervace);
+        }
 
-            //Výpis celkového počtu rezervací
+        //Výpis celkového počtu rezervací
         vypisPocetRezervaci(rezervaceList);
-            //Výpis celkového počtu pracovních rezervací
+        //Výpis celkového počtu pracovních rezervací
         int pocetPracovnichPobytu = pocetRezervaciPracovniPobyty(rezervaceList);
         System.out.println("Počet rezervací pro pracovní pobyty: " + pocetPracovnichPobytu);
 
-            //Výpis průměru hostů na jednu rezervaci
+        //Výpis průměru hostů na jednu rezervaci
         double prumernyPocetHostu = prumernyPocetHostuNaRezervaci(rezervaceList);
         System.out.println("Průměrný počet hostů na jednu rezervaci: " + prumernyPocetHostu);
 
@@ -172,36 +204,5 @@ public class EvidenceHostu {
 
             System.out.println(hosti + " (" + pokoje + "): " + pocetNoci + " nocí od " + rezervace.getDatumOd().format(formatter) + " za " + celkovaCena + " Kč");
         }
-    }
-
-    //Metoda pro získaní celkového počtu rezervací
-    public static void vypisPocetRezervaci(List<Rezervace> rezervaceList) {
-        int pocetRezervaci = rezervaceList.size();
-        System.out.println("\nCelkový počet rezervací: " + pocetRezervaci);
-    }
-
-    //Metoda pro získání celkového počtu rezervací pro pracovní pobyt
-    public static int pocetRezervaciPracovniPobyty(List<Rezervace> rezervaceList) {
-        int pocetPracovnichPobytu = 0;
-        for (Rezervace rezervace : rezervaceList) {
-            if (rezervace.getTypPobytu() == TypPobytu.PRACOVNI) {
-                pocetPracovnichPobytu++;
-            }
-        }
-        return pocetPracovnichPobytu;
-    }
-
-    //Metoda pro výpočet průměrného počtu hostů na jednu rezervaci
-    public static double prumernyPocetHostuNaRezervaci(List<Rezervace> rezervaceList) {
-        int celkovyPocetHostu = 0;
-        for (Rezervace rezervace : rezervaceList) {
-            celkovyPocetHostu += rezervace.getPocetHostu();
-        }
-        return (double) celkovyPocetHostu / rezervaceList.size();
-    }
-
-    //Metoda pro výpočet počtu nocí mezi dvěma daty
-    public static int pocetNoci(LocalDate datumOd, LocalDate datumDo) {
-        return (int) ChronoUnit.DAYS.between(datumOd, datumDo) + 1;
     }
 }
