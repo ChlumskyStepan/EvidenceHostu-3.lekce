@@ -7,6 +7,9 @@ public class Host {
     private String jmeno;
     private LocalDate datumNarozeni;
 
+    //Formátování datumu na evropský zápis (samostatná konstanta)
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy");
+
     public Host(String jmeno, LocalDate datumNarozeni) {
         this.jmeno = jmeno;
         this.datumNarozeni = datumNarozeni;
@@ -22,8 +25,6 @@ public class Host {
     @Override
 
     public String toString() {
-        // Formátování datumu na evropský zápis
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy");
         return jmeno + " (" + datumNarozeni.format(formatter) + ")";
     }
 }
