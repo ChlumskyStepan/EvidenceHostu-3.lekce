@@ -56,33 +56,44 @@ public class EvidenceHostu {
         Host jan = new Host("Jan Dvořáček", LocalDate.of(1995, 5, 5));
 
         //Host Karel Dvořák
-        Host karel = new Host("Karel Dvořák", LocalDate.of(1980, 6, 5));
+        Host karel = new Host("Karel Dvořák", LocalDate.of(1980, 5, 15));
+
+        //Host jiný Karel Dvořák
+        Host karel2 = new Host("Karel Dvořák", LocalDate.of(1979, 1, 3));
 
         //Host Cestovní Kancelář
         Host cestovniKancelar = new Host("Cestovní kancelář ABC Relax", LocalDate.of(2000, 1, 1));
 
-        LocalDate startOfJune = LocalDate.of(2023, 6, 1);
-        LocalDate endOfJune = LocalDate.of(2023, 6, 30);
+        //Datum pro rezervaci v červnu pro Cestovní kancelář
+        LocalDate zacatekCervna = LocalDate.of(2023, 6, 1);
+        LocalDate konecCervna = LocalDate.of(2023, 6, 30);
 
-
-        LocalDate startOfAugust = LocalDate.of(2023, 8, 1);
-        LocalDate endOfAugust = LocalDate.of(2023, 8, 31);
+        //Datum pro rezervaci v srpnu pro Cestovní kancelář
+        LocalDate zacatekSrpna = LocalDate.of(2023, 8, 1);
 
         //Host Alena Krásova
         Host alena = new Host("Alena Krásová", LocalDate.of(1990, 4, 20));
 
-        LocalDate startOfMonth = LocalDate.of(2023, 6, 1);
-        LocalDate endOfMonth = LocalDate.of(2023, 6, 30);
-        LocalDate endDate = startOfMonth;
+        //Datum pro rezervaci vždy na prvních 5 dnů v měsíci pro Alenu Krásovovou
+        LocalDate zacatekMesice = LocalDate.of(2023, 6, 1);
+        LocalDate konecMesice = LocalDate.of(2023, 6, 30);
+        LocalDate konecRezervace = zacatekMesice;
 
 
-        //Výpis popisu hostů na obrazovku
+        //Nově seznam hostů
+        List<Host> hostList = new ArrayList<>();
+        hostList.add(adela);
+        hostList.add(jan);
+        hostList.add(karel);
+        hostList.add(karel2);
+        hostList.add(cestovniKancelar);
+        hostList.add(alena);
+
+        //Výpis všech hostů na obrazovku
         System.out.println("\nPopis hostů:");
-        System.out.println(adela);
-        System.out.println(jan);
-        System.out.println(karel);
-        System.out.println(cestovniKancelar);
-        System.out.println(alena);
+        for (Host host : hostList) {
+            System.out.println(host);
+        }
 
         //Vytvoření nových pokojů s číslem, počtem lůžek, balkónem a výhledem na moře
         Pokoj pokoj1 = new Pokoj(1, 1, 1000, true, true);
@@ -101,14 +112,14 @@ public class EvidenceHostu {
             System.out.println(pokoj);
         }
 
-        //Vytvoření rezervací nově s pobytem
-        Rezervace rezervace1 = new Rezervace(List.of(adela), List.of(pokoj1), LocalDate.of(2021, 7, 19), LocalDate.of(2021, 7, 26), TypPobytu.REKREACNI);
-        Rezervace rezervace2 = new Rezervace(List.of(adela), List.of(pokoj3), LocalDate.of(2021, 9, 1), LocalDate.of(2021, 9, 14), TypPobytu.REKREACNI);
-        Rezervace rezervace3 = new Rezervace(List.of(jan), List.of(pokoj3), LocalDate.of(2021, 9, 1), LocalDate.of(2021, 9, 14), TypPobytu.REKREACNI);
-        Rezervace rezervace4 = new Rezervace(List.of(karel), List.of(pokoj3), LocalDate.of(2021, 6, 1), LocalDate.of(2021, 7, 6), TypPobytu.PRACOVNI);
+        //Vytvoření rezervací nově s typem pobytu
+        Rezervace rezervace1 = new Rezervace(List.of(adela), List.of(pokoj1), LocalDate.of(2023, 7, 19), LocalDate.of(2023, 7, 26), TypPobytu.REKREACNI);
+        Rezervace rezervace2 = new Rezervace(List.of(adela,jan), List.of(pokoj3), LocalDate.of(2023, 9, 1), LocalDate.of(2023, 9, 14), TypPobytu.REKREACNI);
+        Rezervace rezervace3 = new Rezervace(List.of(karel), List.of(pokoj3), LocalDate.of(2023, 6, 1), LocalDate.of(2023, 6, 7), TypPobytu.PRACOVNI);
+        Rezervace rezervace4 = new Rezervace(List.of(karel2), List.of(pokoj2), LocalDate.of(2023, 8, 18), LocalDate.of(2023, 8, 21), TypPobytu.REKREACNI);
 
 
-        // Seznam rezervací
+        //Seznam rezervací
         List<Rezervace> rezervaceList = new ArrayList<>();
         rezervaceList.add(rezervace1);
         rezervaceList.add(rezervace2);
@@ -117,15 +128,14 @@ public class EvidenceHostu {
 
 
         //30 jednodenní rezervace pro cestovní kancelář
-
-        for (LocalDate date = startOfJune; date.isBefore(endOfJune.plusDays(1)); date = date.plusDays(1)) {
+        for (LocalDate date = zacatekCervna; date.isBefore(konecCervna.plusDays(1)); date = date.plusDays(1)) {
             Rezervace rezervace = new Rezervace(List.of(cestovniKancelar), List.of(pokoj2), date, date, TypPobytu.REKREACNI);
             rezervaceList.add(rezervace);
         }
 
         //Čtyři třídenní rezervace pro cestovní kancelář
-
-        for (LocalDate date = startOfAugust; date.isBefore(endOfAugust.plusDays(1)); date = date.plusDays(7)) {
+        List<LocalDate> dataRezevaci = List.of(zacatekSrpna, zacatekSrpna.plusDays(6), zacatekSrpna.plusDays(13), zacatekSrpna.plusDays(20));
+        for (LocalDate date : dataRezevaci) {
             Rezervace rezervace = new Rezervace(List.of(cestovniKancelar), List.of(pokoj2), date, date.plusDays(2), TypPobytu.REKREACNI);
             rezervaceList.add(rezervace);
         }
@@ -134,11 +144,11 @@ public class EvidenceHostu {
         //Rezervace pro Alenu od 1.6 na prvních 5 dnů v měsíci
 
         for (int i = 0; i < 7; i++) {
-            LocalDate startDate = endDate;
-            endDate = startDate.plusDays(4);
+            LocalDate startDate = konecRezervace;
+            konecRezervace = startDate.plusDays(4);
 
-            if (startDate.isBefore(endOfMonth.plusDays(1))) {
-                Rezervace rezervace = new Rezervace(List.of(alena), List.of(pokoj1), startDate, endDate, TypPobytu.PRACOVNI);
+            if (startDate.isBefore(konecMesice.plusDays(1))) {
+                Rezervace rezervace = new Rezervace(List.of(alena), List.of(pokoj1), startDate, konecRezervace, TypPobytu.PRACOVNI);
                 rezervaceList.add(rezervace);
             }
         }
@@ -175,7 +185,7 @@ public class EvidenceHostu {
         //Výpis celkového počtu jednodenních, dvoudenních a vícedenních pobytů
         int jednodenniPobyty = 0;
         int dvoudenniPobyty = 0;
-        int vicenocniPobyty = 0;
+        int vicedenniPobyty = 0;
 
         for (Rezervace rezervace : rezervaceList) {
             long pocetNoci = ChronoUnit.DAYS.between(rezervace.getDatumOd(), rezervace.getDatumDo());
@@ -185,13 +195,13 @@ public class EvidenceHostu {
             } else if (pocetNoci == 1) {
                 dvoudenniPobyty++;
             } else {
-                vicenocniPobyty++;
+                vicedenniPobyty++;
             }
         }
 
         System.out.println("\nCelkový počet jednodenních pobytů: " + jednodenniPobyty);
         System.out.println("Celkový počet dvoudenních pobytů: " + dvoudenniPobyty);
-        System.out.println("Celkový počet vícedenních pobytů: " + vicenocniPobyty);
+        System.out.println("Celkový počet vícedenních pobytů: " + vicedenniPobyty);
 
         // Výpočet ceny pro každou rezervaci
         System.out.println("\nCelková cena všech rezervací:");
