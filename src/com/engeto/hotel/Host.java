@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Host {
-    private String jmeno;
-    private LocalDate datumNarozeni;
+    private final String jmeno;
+    private final LocalDate datumNarozeni;
 
     //Formátování datumu na evropský zápis (samostatná konstanta)
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d.M.yyyy");
