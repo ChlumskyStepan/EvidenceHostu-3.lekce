@@ -16,7 +16,7 @@ public class EvidenceHostu {
     //Metoda pro získaní celkového počtu rezervací
     public static void vypisPocetRezervaci(List<Rezervace> rezervaceList) {
         int pocetRezervaci = rezervaceList.size();
-        System.out.println("\nCelkový počet rezervací: " + pocetRezervaci);
+        System.out.println("\n////Celkový počet rezervací: " + pocetRezervaci);
     }
 
     //Metoda pro získání celkového počtu rezervací pro pracovní pobyt
@@ -33,11 +33,13 @@ public class EvidenceHostu {
     //Metoda pro výpočet průměrného počtu hostů na jednu rezervaci
     public static double prumernyPocetHostuNaRezervaci(List<Rezervace> rezervaceList) {
         int celkovyPocetHostu = 0;
+        int pocetRezervaci = rezervaceList.size();
         for (Rezervace rezervace : rezervaceList) {
-            celkovyPocetHostu += rezervace.getPocetHostu();
+            celkovyPocetHostu += rezervace.getHosti().size();
         }
-        return (double) celkovyPocetHostu / rezervaceList.size();
+        return (double) celkovyPocetHostu / pocetRezervaci;
     }
+
 
     //Metoda pro výpočet počtu nocí mezi dvěma daty
     public static int pocetNoci(LocalDate datumOd, LocalDate datumDo) {
@@ -90,7 +92,7 @@ public class EvidenceHostu {
         hostList.add(alena);
 
         //Výpis všech hostů na obrazovku
-        System.out.println("\nPopis hostů:");
+        System.out.println("\n/// Popis hostů:");
         for (Host host : hostList) {
             System.out.println(host);
         }
@@ -107,7 +109,7 @@ public class EvidenceHostu {
         pokojList.add(pokoj3);
 
         //Vypsání popisu pokojů na obrazovku
-        System.out.println("\nPopis pokojů:");
+        System.out.println("\n/// Popis pokojů:");
         for (Pokoj pokoj : pokojList) {
             System.out.println(pokoj);
         }
@@ -134,8 +136,8 @@ public class EvidenceHostu {
         }
 
         //Čtyři třídenní rezervace pro cestovní kancelář
-        List<LocalDate> dataRezevaci = List.of(zacatekSrpna, zacatekSrpna.plusDays(6), zacatekSrpna.plusDays(13), zacatekSrpna.plusDays(20));
-        for (LocalDate date : dataRezevaci) {
+        List<LocalDate> dataRezervaci = List.of(zacatekSrpna, zacatekSrpna.plusDays(6), zacatekSrpna.plusDays(13), zacatekSrpna.plusDays(20));
+        for (LocalDate date : dataRezervaci) {
             Rezervace rezervace = new Rezervace(List.of(cestovniKancelar), List.of(pokoj2), date, date.plusDays(2), TypPobytu.REKREACNI);
             rezervaceList.add(rezervace);
         }
@@ -154,23 +156,48 @@ public class EvidenceHostu {
         }
 
         //Výpis seznamu rezervací na obrazovku
-        System.out.println("\nSeznam všech rezervací:");
+        //
+        //Upravený výpis seznamu rezervací podle formátu:
+        // datumOd až datumDo: jméno hosta (datum narození)[počet lůžek, výhledNaMoře ano/ne]
+
+        System.out.println("\n/// Seznam všech rezervací:");
         for (Rezervace rezervace : rezervaceList) {
-            System.out.println(rezervace);
+            LocalDate datumOd = rezervace.getDatumOd();
+            LocalDate datumDo = rezervace.getDatumDo();
+            List<Host> hosti = rezervace.getHosti();
+            List<Pokoj> pokoje = rezervace.getPokoje();
+
+            StringBuilder hostiPopis = new StringBuilder();
+            for (Host host : hosti) {
+                String jmenoHosta = host.getJmeno();
+                LocalDate datumNarozeni = host.getDatumNarozeni();
+                String hostPopis = jmenoHosta + " (" + datumNarozeni.format(formatter) + ")";
+                hostiPopis.append(hostPopis).append(" ");
+            }
+
+            StringBuilder pokojePopis = new StringBuilder();
+            for (Pokoj pokoj : pokoje){
+                int pocetLuzek = pokoj.getPocetLuzek();
+                boolean vyhledNaMore = pokoj.hasVyhledNaMore();
+                String vyhledText = vyhledNaMore ? "ano" : "ne";
+                String pokojPopis = "[" + pocetLuzek + ", " + vyhledText + "]" ;
+                pokojePopis.append(pokojPopis).append(" ");
+            }
+            System.out.println(datumOd.format(formatter) + " až " + datumDo.format(formatter) + ": " + hostiPopis + pokojePopis);
         }
 
         //Výpis celkového počtu rezervací
         vypisPocetRezervaci(rezervaceList);
         //Výpis celkového počtu pracovních rezervací
         int pocetPracovnichPobytu = pocetRezervaciPracovniPobyty(rezervaceList);
-        System.out.println("Počet rezervací pro pracovní pobyty: " + pocetPracovnichPobytu);
+        System.out.println("/// Počet rezervací pro pracovní pobyty: " + pocetPracovnichPobytu);
 
         //Výpis průměru hostů na jednu rezervaci
         double prumernyPocetHostu = prumernyPocetHostuNaRezervaci(rezervaceList);
-        System.out.println("Průměrný počet hostů na jednu rezervaci: " + prumernyPocetHostu);
+        System.out.println("/// Průměrný počet hostů na jednu rezervaci: " + prumernyPocetHostu);
 
         //Výpis prvních 8 rezervací pro rekreační pobyty
-        System.out.println("\nPrvních 8 rezervací pro rekreaci:");
+        System.out.println("\n/// Prvních 8 rezervací pro rekreaci:");
         int pocetRekreacnichRezervaci = 0;
         for (Rezervace rezervace : rezervaceList) {
             if (rezervace.getTypPobytu() == TypPobytu.REKREACNI) {
@@ -199,12 +226,12 @@ public class EvidenceHostu {
             }
         }
 
-        System.out.println("\nCelkový počet jednodenních pobytů: " + jednodenniPobyty);
-        System.out.println("Celkový počet dvoudenních pobytů: " + dvoudenniPobyty);
-        System.out.println("Celkový počet vícedenních pobytů: " + vicedenniPobyty);
+        System.out.println("\n/// Celkový počet jednodenních pobytů: " + jednodenniPobyty);
+        System.out.println("/// Celkový počet dvoudenních pobytů: " + dvoudenniPobyty);
+        System.out.println("/// Celkový počet vícedenních pobytů: " + vicedenniPobyty);
 
         // Výpočet ceny pro každou rezervaci
-        System.out.println("\nCelková cena všech rezervací:");
+        System.out.println("\n/// Celková cena všech rezervací:");
         for (Rezervace rezervace : rezervaceList) {
             int pocetNoci = pocetNoci(rezervace.getDatumOd(), rezervace.getDatumDo());
             int celkovaCena = (int) (pocetNoci * rezervace.getPokoje().get(0).getCena());
