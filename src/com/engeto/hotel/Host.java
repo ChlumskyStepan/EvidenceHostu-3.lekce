@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class Host {
-    private final String jmeno;
+    private String jmeno;
     private final LocalDate datumNarozeni;
 
     //Formátování datumu na evropský zápis (samostatná konstanta)
